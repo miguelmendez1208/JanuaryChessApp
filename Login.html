@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comet Chess</title>
+    <!-- Download jQuery Libraries from CDNs. Includes Mobile CSS and core JavaScript files -->
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+    <div data-role="page" id="login">
+        <div data-role="header">
+            <h1>Log In to Comet Chess</h1>
+        </div>
+        <div data-role="content" class="ui-content" role="main">
+            Email:
+            <input type="text" id="email"></input>
+            Password:
+            <input type="password" id="password"></input>
+            <button id="login">Log In</button>
+            <a href="#play"><button>play</button></a>
+            <script>
+                document.getElementById("login").addEventListener("click", submitPassword);
+                //document.getElementById("signup").addEventListener("click", signUp);
+
+                function signUp() {
+                    window.location.replace("#signUpPage");
+                }
+
+                function submitPassword() {
+                    var pass = document.getElementById("password").value;
+                    var email = document.getElementById("email").value;
+
+                    if (ValidateLogin(email, pass)) {
+                        window.location.replace("#play");
+                    }
+                }
+
+                function ValidateLogin(email, password) //checks for empty and also valid password characters
+                {
+                    if (password == "" || email == "") {
+                        document.getElementById("txtHintLogin").innerHTML = "Please enter your password or email.";
+                        return false;
+                    }
+                    else {
+                        const validPassChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B",
+                            "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "!", "(", ")", "?", "{", "}", "[",
+                            , "]", "_", "`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "+", "=", "-", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "."];
+                        const invalidAtFront = ["-", "."];
+
+                        for (let i = 0; i < invalidAtFront.length; i++) {
+                            if (password.charAt(0) == invalidAtFront[i]) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+
+                        }
+
+
+                        for (let i = 0; i < password.length; i++) {
+                            let contains = false;
+                            for (let j = 0; j < validPassChars.length; j++) {
+                                if (password.charAt(i) == validPassChars[j]) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (contains == false) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+                        }
+
+                        const validEmailChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B",
+                            "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_", ".", "-", "@"];
+                        const specialEmailChars = ["_", ".", "-"];
+                        let count = 0;
+                        let index = 0;
+                        for (let i = 0; i < email.length; i++) {
+                            if (email.charAt(i) == '@')
+                            {
+                                index = i;
+                                count = count + 1;
+                            }
+                        }
+
+                        if (count != 1) {
+                            document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                            return false;
+                        }
+                        for (let i = 0; i < specialEmailChars.length; i++) {
+                            if (email.endsWith(specialEmailChars[i])) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+                            if (email.at(index - 1) == specialEmailChars[i]) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+                        }
+
+                        for (let i = 0; i < email.length; i++) {
+                            let contains = false;
+                            for (let j = 0; j < validEmailChars.length; j++) {
+                                console.log(j);
+                                if (email.charAt(i) == validEmailChars[j]) {
+                                    contains = true;
+                                    console.log("Checking " + email.charAt(i) + validEmailChars[j]);
+                                    break;
+                                }
+                            }
+                            if (contains == false) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                console.log("Failed at " + email.charAt(i));
+                                return false;
+                            }
+                        }
+
+                        for (let i = 0; i < email.length; i++)
+                        {
+                            if (email.charAt(i) == '.') {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
+
+            </script>
+            <button id="signup">Sign Up</button>
+            <script> document.getElementById("signup").addEventListener("click", signUp); </script>
+            <!-- DISPLAYS ANY NEEDED OUTPUT SUCH AS INVALID LOGIN           -->
+            <div id="txtHintLogin"></div>
+        </div>
+    </div>
+
+    <div data-role="page" id="play">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+            <title>CometChess</title>
+            <base href="../" />
+            <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+        </head>
+        <body>
+            <!--- Begin Example HTML ------------------------------------------------------>
+            <div id="myBoard" style="width: 400px"></div>
+            <label>Status:</label>
+            <div id="status"></div>
+            <label>FEN:</label>
+            <div id="fen"></div>
+            <label>PGN:</label>
+            <div id="pgn"></div>
+            <!--<button id="changePlayer">SwitchPlayer</button> -->
+            <button id="flipOrientationBtn">Flip Orientation</button>
+            <button id="saveGameBtn">Save Game</button>
+            <div id="popUpSave"></div>
+            <!--- End Example HTML -------------------------------------------------------->
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+                    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+                    crossorigin="anonymous"></script>
+            <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js" integrity="sha384-s3XgLpvmHyscVpijnseAmye819Ee3yaGa8NxstkJVyA6nuDFjt59u1QvuEl/mecz" crossorigin="anonymous"></script>
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+
+var board = null
+var game = new Chess()
+var $status = $('#status')
+var $fen = $('#fen')
+var $pgn = $('#pgn')
+var socket = io();
+//When receiving a 'chat messsage' (change later) call the onlinePosition which updates the Board + Game
+socket.on('chat message', function(msg) {
+  onlinePosition(msg);
+});
+
+function pieceTheme (piece){ // override default piece theme for local hosting
+  return 'http://cometchess.com/img/chesspieces/wikipedia/' + piece + '.png'
+}
+
+function onDragStart (source, piece, position, orientation) {
+  // do not pick up pieces if the game is over
+  if (game.game_over()) return false
+
+  // only pick up pieces for the side to move
+  if ((game.turn() === 'w' && piece.search(/^b/) === -1 && orientation === 'white') ||
+      (game.turn() === 'b' && piece.search(/^w/) === -1 && orientation === 'black')) {
+        // If all these conditions are met, the user is allowed to pick up the piece
+  }
+  else{   // Logs are for error handling
+    console.log("Whose turn?: " + game.turn() + " Which piece?: " + piece.search(/^w/) + " which player?: " + orientation);
+    console.log("This GUI: " + board.fen());
+    console.log("This JS: " + game.fen());
+    return false; // If user tries to pick up a piece they're not allowed to, don't allow it
+  }
+}
+function saveGame(){
+  var gameSave = "allo";
+  gameSave = game.fen();
+  //console.log("saveGame");
+  //$("savePart").innerHTML = "<div class=\"popUpSave\"><div class=\"popUpHeading\">FEN</div> <input class=\"inputSave\"  id=\"inputSave\" readonly=\"readonly\"></input></div>";
+  //$("inputSave").innerHTML = gameSave;
+  console.log("saveGame" + gameSave);
+  //return gameSave;
+}
+function onlinePosition(passFen){
+    console.log("Receiving: " + passFen);
+    console.log("This GUI BEFORE: " + board.fen());
+    console.log("This JS BEFORE: " + game.fen());
+
+    if(board.fen()!==passFen && game.fen()!==passFen){ // Makes sure no infinite loops occur before loading position
+    board.position(passFen); // Update board position
+    game.load(passFen); // Update game position
+    updateStatus();
+    console.log("This GUI AFTER: " + board.fen());
+    console.log("This JS AFTER: " + game.fen());
+    }
+    else{
+      console.log("NO UPDATE FIX THIS" + passFen);
+    }
+}
+function onDrop (source, target) {
+  // see if the move is legal
+  var move = game.move({
+    from: source,
+    to: target,
+    promotion: 'q' // NOTE: always promote to a queen for example simplicity
+  })
+
+  // illegal move
+  if (move === null){ return 'snapback' }
+  else{ // Send FEN
+    var messages = game.fen();
+    console.log("onDrop log, sending move: " + messages);
+    socket.emit('chat message', messages);
+  }
+  updateStatus()
+}
+
+// update the board position after the piece snap
+// for castling, en passant, pawn promotion
+function onSnapEnd () {
+  board.position(game.fen())
+}
+
+function updateStatus () {
+  var status = ''
+
+  var moveColor = 'White'
+  if (game.turn() === 'b') {
+    moveColor = 'Black'
+  }
+
+  // checkmate?
+  if (game.in_checkmate()) {
+    status = 'Game over, ' + moveColor + ' is in checkmate.'
+  }
+
+  // draw?
+  else if (game.in_draw()) {
+    status = 'Game over, drawn position'
+  }
+
+  // game still on
+  else {
+    status = moveColor + ' to move'
+
+    // check?
+    if (game.in_check()) {
+      status += ', ' + moveColor + ' is in check'
+    }
+  }
+
+  $status.html(status)
+  $fen.html(game.fen())
+  $pgn.html(game.pgn())
+}
+
+var config = {
+  draggable: true,
+  position: 'start',
+  onDragStart: onDragStart,
+  onDrop: onDrop,
+  onSnapEnd: onSnapEnd,
+  pieceTheme: pieceTheme
+}
+board = Chessboard('myBoard', config)
+$('#flipOrientationBtn').on('click', board.flip) // Remove this later
+//$('#saveGameBtn').on('click', saveGame()); //save game
+updateStatus()
+//Assign color
+socket.on('serverColor', function(colour) {
+  //$('#saveGameBtn').on('click', saveGame()); //save game
+  if(colour===-1){
+    board.flip();
+    console.log("true")
+  }
+});
+// --- End Example JS ----------------------------------------------------------
+            </script>
+        </body>
+        <a href="#login"><button>go back</button></a>
+    </div>
+
+    <div data-role="page" id="signUpPage">
+        <div data-role="header">
+            <h1>Sign up to Comet Chess!</h1>
+        </div>
+
+        <div data-role="content">
+            <!--<form action="Assign12a.php" method="get">-->
+            Username:<input type="text" name="username" id="userName"></input><br>
+            Email Address:<input type="text" name="email" id="enterEmail"></input><br>
+            Password:<input type="password" name="password" id="enterPassword"></input><br>
+            Re-enter password:<input type="password" name="password2" id="enterPassword2"></input><br>
+            <button id="register">SignUp</button>
+            <h1 style="color:red" id="txtHintRegister"></h1>
+            <script>
+                document.getElementById("register").addEventListener("click", signUp);
+
+                function signUp() {
+                    var userName = document.getElementById("userName").value;;
+                    var pass1 = document.getElementById("enterPassword").value;
+                    var pass2 = document.getElementById("enterPassword2").value;
+                    var Email = document.getElementById("enterEmail").value;;
+                    if (passwordMatch(pass1, pass2)) {
+                        if (ValidateLogin(Email, pass1)) {
+                            window.location.replace("#play");
+                        }
+                    }
+                }
+
+                function passwordMatch(pass1, pass2) {
+                    if (pass1 === pass2) {
+                        //successful registration
+                        console.log("passwords match");
+                        document.getElementById("txtHintRegister").innerHTML = "";
+                        return true;
+                    }
+                    else {
+                        document.getElementById("txtHintRegister").innerHTML = "Passwords do not match!";
+                        return false;
+                    }
+                }
+
+                function ValidateLogin(email, password) //checks for empty and also valid password characters
+                {
+                    if (password == "" || email == "") {
+                        document.getElementById("txtHintLogin").innerHTML = "Please enter your password or email.";
+                        return false;
+                    }
+                    else {
+                        const validPassChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B",
+                            "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "!", "(", ")", "?", "{", "}", "[",
+                            , "]", "_", "`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "+", "=", "-", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "."];
+                        const invalidAtFront = ["-", "."];
+
+                        for (let i = 0; i < invalidAtFront.length; i++) {
+                            if (password.charAt(0) == invalidAtFront[i]) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+
+                        }
+
+
+                        for (let i = 0; i < password.length; i++) {
+                            let contains = false;
+                            for (let j = 0; j < validPassChars.length; j++) {
+                                if (password.charAt(i) == validPassChars[j]) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (contains == false) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+                        }
+
+                        const validEmailChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B",
+                            "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_", ".", "-", "@"];
+                        const specialEmailChars = ["_", ".", "-"];
+                        let count = 0;
+                        let index = 0;
+                        for (let i = 0; i < email.length; i++) {
+                            if (email.charAt(i) == '@') {
+                                index = i;
+                                count = count + 1;
+                            }
+                        }
+
+                        if (count != 1) {
+                            document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                            return false;
+                        }
+                        for (let i = 0; i < specialEmailChars.length; i++) {
+                            if (email.endsWith(specialEmailChars[i])) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+                            if (email.at(index - 1) == specialEmailChars[i]) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                return false;
+                            }
+                        }
+
+                        for (let i = 0; i < email.length; i++) {
+                            let contains = false;
+                            for (let j = 0; j < validEmailChars.length; j++) {
+                                console.log(j);
+                                if (email.charAt(i) == validEmailChars[j]) {
+                                    contains = true;
+                                    console.log("Checking " + email.charAt(i) + validEmailChars[j]);
+                                    break;
+                                }
+                            }
+                            if (contains == false) {
+                                document.getElementById("txtHintLogin").innerHTML = "Please enter a valid username or password.";
+                                console.log("Failed at " + email.charAt(i));
+                                return false;
+                            }
+                        }
+
+                        for (let i = 0; i < email.length; i++) {
+                            if (email.charAt(i) == '.') {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            </script>
+        </div>
+    </div>
+
+</body>
+</html>
