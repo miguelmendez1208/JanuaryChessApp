@@ -181,7 +181,7 @@ socket.on('chat message', function(msg) {
 });
 
 function pieceTheme (piece){ // override default piece theme for local hosting
-  return 'http://cometchess.com/img/chesspieces/wikipedia/' + piece + '.png'
+  return 'node_modules/img/' + piece + '.png'
 }
 
 function onDragStart (source, piece, position, orientation) {
