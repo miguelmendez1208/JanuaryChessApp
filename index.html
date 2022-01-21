@@ -181,7 +181,7 @@ socket.on('chat message', function(msg) {
 });
 
 function pieceTheme (piece){ // override default piece theme for local hosting
-    return 'node_modules/img/' + piece + '.png'
+    return './img/' + piece + '.png'
 }
 
 function onDragStart (source, piece, position, orientation) {
